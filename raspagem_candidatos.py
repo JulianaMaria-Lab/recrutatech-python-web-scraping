@@ -1,3 +1,5 @@
+from flask import Flask, request, jsonify
+from flask_cors import CORS
 import requests
 from bs4 import BeautifulSoup
 
@@ -42,6 +44,25 @@ def mostrarSobrePessoa(a):
     else:
         print(r[t-1]) 
 
+def mostrarSobreProfissao(a):
+    z = []
+    r = []
+    t = 0
+    for x in profissao:
+        z.append(x.text)
+
+    for d in z:
+        if (a == d):
+            for e in sobre:
+                r.append(e.text)
+            print(r[t]+"\n----------------------------------------------------------------------------------------------------------------\n"+
+                  "----------------------------------------------------------------------------------------------------------------\n"+
+                  "----------------------------------------------------------------------------------------------------------------\n"+
+                  "----------------------------------------------------------------------------------------------------------------\n"+
+                  "----------------------------------------------------------------------------------------------------------------\n")
+        t = t + 1
+
+
 def mostrarProfissaoPessoa(a):
     z = []
     r = []
@@ -58,5 +79,17 @@ def mostrarProfissaoPessoa(a):
     else:
         print(r[t-1])         
 
+app = Flask(__name__)
+CORS(app)
 
-profissoes()
+@app.route('/scraping', methods=['POST'])
+def ask_question():
+    try:
+        data = request.data.decode('utf-8')
+        return jsonify(mostrarSobreProfissao(data))
+
+    except Exception as e:
+        return jsonify({"error": str(e)})
+
+if __name__ == '__main__':
+    app.run(host='0.0.0.0', port=7000)
