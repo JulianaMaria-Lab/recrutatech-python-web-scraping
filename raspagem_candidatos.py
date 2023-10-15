@@ -47,6 +47,7 @@ def mostrarSobrePessoa(a):
 def mostrarSobreProfissao(a):
     z = []
     r = []
+    o = []
     t = 0
     for x in profissao:
         z.append(x.text)
@@ -60,7 +61,9 @@ def mostrarSobreProfissao(a):
                   "----------------------------------------------------------------------------------------------------------------\n"+
                   "----------------------------------------------------------------------------------------------------------------\n"+
                   "----------------------------------------------------------------------------------------------------------------\n")
+
         t = t + 1
+    return jsonify(r)
 
 
 def mostrarProfissaoPessoa(a):
@@ -77,7 +80,8 @@ def mostrarProfissaoPessoa(a):
     if(t == 0):
         print("Pessoa não existe!")
     else:
-        print(r[t-1])         
+        print(r[t-1])
+                 
 
 app = Flask(__name__)
 CORS(app)
@@ -86,7 +90,7 @@ CORS(app)
 def ask_question():
     try:
         data = request.data.decode('utf-8')
-        return jsonify(mostrarSobreProfissao(data))
+        return mostrarSobreProfissao(data)
 
     except Exception as e:
         return jsonify({"error": str(e)})
