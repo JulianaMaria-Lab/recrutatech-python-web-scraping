@@ -7,9 +7,12 @@ link = "http://localhost:8000"
 headers = {"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/117.0.0.0 Safari/537.36"}
 requisicao = requests.get(link, headers=headers)
 site = BeautifulSoup(requisicao.text, "html.parser")
-profissao = site.findAll("h4")
+# profissao = site.findAll("h4")
 sobre = site.findAll("pre")
-pessoa = site.findAll("h2")
+# pessoa = site.findAll("h2")
+profissao = site.findAll("h4", {"class": "profissao"})
+pessoa = site.findAll("h2", {"class": "nome"})
+codigo = site.findAll("h3", {"class": "codigo"})
 
 def profissoes():
     for x in profissao:
