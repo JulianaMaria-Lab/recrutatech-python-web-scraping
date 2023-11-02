@@ -100,7 +100,7 @@ def matchProfissao(a):
         v_habilidade = 0
         v_atitude = 0
                 
-    return jsonify(verificacao)
+    return jsonify(matchs)
                  
 
 app = Flask(__name__)
