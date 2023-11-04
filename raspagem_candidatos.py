@@ -52,7 +52,7 @@ def matchProfissao(a):
     sobres = []
     verificacao = []
     matchs = []
-    rank = []
+    rank = {}
     contador = 0
     v_conhecimento = 0
     v_habilidade = 0
@@ -77,32 +77,49 @@ def matchProfissao(a):
     
     contador = 0
     
+    cont_co = 0
+    cont_ha = 0
+    cont_at = 0
+
+    for c in a["conhecimentos"]:
+        cont_co = cont_co + 1
+
+    for c in a["habilidades"]:
+        cont_ha = cont_ha + 1
+    
+    for c in a["atitudes"]:
+        cont_at = cont_at + 1
+
+    porcetagem = (cont_co + cont_ha + cont_at) / 10
+
     for s in sobres:
-        for palavra in s.split():
-            for conhecimento in a["conhecimentos"]:
-                if(palavra.lower() == conhecimento.lower()):
-                    v_conhecimento = v_conhecimento + 1
-
-            for habilidade in a["habilidades"]:
-                if(palavra.lower() == habilidade.lower()):
-                    v_habilidade = v_habilidade + 1
-
-            for atitude in a["atitudes"]:
-                if(palavra.lower() == atitude.lower()):
-                    v_atitude = v_atitude + 1
+        for conhecimento in a["conhecimentos"]:
+            if all(item in s.lower().split() for item in conhecimento.lower().split()):
+                v_conhecimento = v_conhecimento + 1
+        
+        for habilidade in a["habilidades"]:
+            if all(item in s.lower().split() for item in habilidade.lower().split()):
+                v_habilidade = v_habilidade + 1
+        
+        for atitude in a["atitudes"]:
+            if all(item in s.lower().split() for item in atitude.lower().split()):
+                v_habilidade = v_habilidade + 1
 
         v = [v_conhecimento, v_habilidade, v_atitude]
         verificacao.append(v)
         total = v_conhecimento + v_habilidade + v_atitude 
-        rank.append(total)
-        if(total > 2):
+        if(total > porcetagem):
             matchs.append(codigos[contador])
-        contador = contador + 1
+            porc = (total / (cont_co + cont_ha + cont_at)) * 100
+            rank.update({codigos[contador]: round(porc, 2)})
+        contador = contador + 1    
         v_conhecimento = 0
         v_habilidade = 0
         v_atitude = 0
-                
-    return jsonify(matchs)
+    
+    rank_ordenado = [(chave, valor) for chave, valor in rank.items()]
+    rank_ordenado.sort(key=lambda item: item[1], reverse=True)
+    return jsonify(rank_ordenado)
                  
 
 app = Flask(__name__)
@@ -120,5 +137,3 @@ def ask_question():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7000)
-
-qtd_pessoa_profissao("Scrum Master")
