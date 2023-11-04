@@ -22,7 +22,7 @@ def profissoes():
 def qtd_pessoa_profissao(a):
     cont = 0
     for x in profissao:
-        if(a == x.text):
+        if(a.lower() == (x.text).lower()):
             cont = cont + 1
     print(cont)
 
@@ -52,6 +52,7 @@ def matchProfissao(a):
     sobres = []
     verificacao = []
     matchs = []
+    rank = []
     contador = 0
     v_conhecimento = 0
     v_habilidade = 0
@@ -93,6 +94,7 @@ def matchProfissao(a):
         v = [v_conhecimento, v_habilidade, v_atitude]
         verificacao.append(v)
         total = v_conhecimento + v_habilidade + v_atitude 
+        rank.append(total)
         if(total > 2):
             matchs.append(codigos[contador])
         contador = contador + 1
@@ -118,3 +120,5 @@ def ask_question():
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=7000)
+
+qtd_pessoa_profissao("Scrum Master")
